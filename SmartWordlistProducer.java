@@ -153,7 +153,7 @@ public class SmartWordlistProducer implements Runnable {
                 localWords.put(previousWord, word);
                 previousWord = word;
 
-                if (AndroidKeystoreBrute.onlyLowerCase == false) {
+                if (AndroidKeystoreBrute.enableUpperCase) {
                     // Capitalize first Letter
                     char[] stringArray = word.toCharArray();
 
@@ -221,7 +221,7 @@ public class SmartWordlistProducer implements Runnable {
         wordsLast = "9";
 
         // add special chars
-        if (AndroidKeystoreBrute.disableSpecialChars == false) {
+        if (AndroidKeystoreBrute.enableSpecialChars) {
             char[] specialChars = {
                     '!', '"', '@', '#', '$', '%', '&', '/', '{', '>',
                     '}', '(', ')', '[', ']', '=', '?', '+', '`', '|',
@@ -229,8 +229,8 @@ public class SmartWordlistProducer implements Runnable {
                     '\'', '\\',
             };
 
-            for (int i = 0; i < specialChars.length; i++) {
-                String character = String.valueOf(specialChars[i]);
+            for (char specialChar : specialChars) {
+                String character = String.valueOf(specialChar);
                 localWords.put(previousWord, character);
                 previousWord = character;
             }

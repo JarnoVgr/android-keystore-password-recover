@@ -8,20 +8,23 @@ public class BrutePasswd extends BasePasswd {
 
     static char[] currPass;
 
-    private static char[] alphabet = {
+    private static char[] alphabet = {};
+
+    private static char[] alphabetUpper = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
             'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-            'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-            'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-            's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2',
-            '3', '4', '5', '6', '7', '8', '9',
+            'W', 'X', 'Y', 'Z'
     };
 
     private static char[] alphabetLower = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g',
             'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-            's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2',
-            '3', '4', '5', '6', '7', '8', '9',
+            's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+    };
+
+    private static char[] numeric = {
+            '0', '1', '2',
+            '3', '4', '5', '6', '7', '8', '9'
     };
 
     private static char[] specialChars = {
@@ -37,11 +40,26 @@ public class BrutePasswd extends BasePasswd {
     }
 
     static public void go(String keystore) throws Exception {
-        go(keystore, AndroidKeystoreBrute.onlyLowerCase ? "a" : "A");
+        go(keystore, AndroidKeystoreBrute.enableUpperCase ? "A" : "a");
+    }
+
+    private static void setupAlphabet() {
+        String alphabetStr = "";
+        if (AndroidKeystoreBrute.enableUpperCase)
+            alphabetStr = alphabetStr + String.valueOf(alphabetUpper);
+        if (AndroidKeystoreBrute.enableLowerCase)
+            alphabetStr = alphabetStr + String.valueOf(alphabetLower);
+        if (AndroidKeystoreBrute.enableNumeric)
+            alphabetStr = alphabetStr + String.valueOf(numeric);
+        if (AndroidKeystoreBrute.enableSpecialChars)
+            alphabetStr = alphabetStr + String.valueOf(specialChars);
+
+        alphabet = alphabetStr.toCharArray();
     }
 
     static void go(String keystore, String start) throws Exception {
         go();
+        setupAlphabet();
 
         char[] pass;
         pass = start.toCharArray();
@@ -104,15 +122,6 @@ public class BrutePasswd extends BasePasswd {
 
     public void run() {
         char[] str = new char[1];
-
-        if (AndroidKeystoreBrute.onlyLowerCase)
-            alphabet = alphabetLower;
-
-        if (!AndroidKeystoreBrute.disableSpecialChars) {
-            String sb = String.valueOf(alphabet) +
-                    String.valueOf(specialChars);
-            alphabet = sb.toCharArray();
-        }
 
         while (!found) {
             str = nextWord(str);

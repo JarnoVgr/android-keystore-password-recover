@@ -57,7 +57,7 @@ public class SmartWordlistPasswd extends BasePasswd {
             System.out.println("\r\nStarting smart wordlist attack on key!!");
             if (AndroidKeystoreBrute.permutations)
                 System.out.println("Using common replacements");
-            else if (!AndroidKeystoreBrute.onlyLowerCase)
+            else if (AndroidKeystoreBrute.enableUpperCase)
                 System.out.println("Trying variations with first letter capitalized\r\n");
 
             int numberOfThreads = Runtime.getRuntime().availableProcessors();

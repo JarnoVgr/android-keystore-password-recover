@@ -1,11 +1,13 @@
 public class AndroidKeystoreBrute {
-    static final int BRUTE = 1;
-    static final int WORD = 2;
-    static final int SWORD = 3;
+    private static final int BRUTE = 1;
+    private static final int WORD = 2;
+    private static final int SWORD = 3;
     private static final String VERSION = "1.08";
     static boolean saveNewKeystore = false;
-    static boolean onlyLowerCase = false;
-    static boolean disableSpecialChars = false;
+    static boolean enableLowerCase = true;
+    static boolean enableUpperCase = true;
+    static boolean enableNumeric = true;
+    static boolean enableSpecialChars = false;
     static boolean permutations = false;
     static int minLength = 0;
     static int minPieces = 1;
@@ -55,13 +57,19 @@ public class AndroidKeystoreBrute {
                     i++;
                     minLength = Integer.parseInt(args[i]);
                     break;
-                case "-onlylower":
-                    onlyLowerCase = true;
+                case "-disableUpper":
+                    enableUpperCase = false;
                     break;
-                case "-nospecials":
-                    disableSpecialChars = true;
+                case "-disableLower":
+                    enableLowerCase = false;
                     break;
-                case "-firstchars":
+                case "-disableNumeric":
+                    enableNumeric = false;
+                    break;
+                case "-enableSpecials":
+                    enableSpecialChars = true;
+                    break;
+                case "-firstChars":
                     i++;
                     firstchars = args[i];
                     break;
@@ -78,7 +86,7 @@ public class AndroidKeystoreBrute {
         }
 
         if (method == BRUTE) {
-            if (onlyLowerCase && start.equals("A"))
+            if (!enableUpperCase && start.equals("A"))
                 start = "a";
 
             BrutePasswd.go(keystore, start);
