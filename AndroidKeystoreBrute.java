@@ -2,15 +2,15 @@ public class AndroidKeystoreBrute {
     static final int BRUTE = 1;
     static final int WORD = 2;
     static final int SWORD = 3;
-    static final String VERSION = "1.07";
-    public static boolean saveNewKeystore = false;
-    public static boolean onlyLowerCase = false;
-    public static boolean disableSpecialChars = false;
-    public static boolean permutations = false;
-    public static int minlength = 0;
-    public static int minpieces = 1;
-    public static int maxpieces = 64;
-    public static String firstchars = null;
+    private static final String VERSION = "1.08";
+    static boolean saveNewKeystore = false;
+    static boolean onlyLowerCase = false;
+    static boolean disableSpecialChars = false;
+    static boolean permutations = false;
+    static int minLength = 0;
+    static int minPieces = 1;
+    static int maxPieces = 64;
+    static String firstchars = null;
 
     public static void main(String[] args) throws Exception {
         String start = "A";
@@ -20,13 +20,14 @@ public class AndroidKeystoreBrute {
         String dict = "";
 
         if (args.length == 0) {
-            printhelp();
+            printHelp();
             return;
         }
+
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-h":
-                    printhelp();
+                    printHelp();
                     return;
                 case "-m":
                     i++;
@@ -52,7 +53,7 @@ public class AndroidKeystoreBrute {
                     break;
                 case "-l":
                     i++;
-                    minlength = Integer.parseInt(args[i]);
+                    minLength = Integer.parseInt(args[i]);
                     break;
                 case "-onlylower":
                     onlyLowerCase = true;
@@ -66,45 +67,36 @@ public class AndroidKeystoreBrute {
                     break;
                 case "-pieces":
                     i++;
-                    minpieces = Integer.parseInt(args[i]);
+                    minPieces = Integer.parseInt(args[i]);
                     i++;
-                    maxpieces = Integer.parseInt(args[i]);
+                    maxPieces = Integer.parseInt(args[i]);
                     break;
                 default:
-                    System.out.println("Unknown argument: " + args[i]);
-                    return;
+                    System.out.println("Ignoring unknown argument: " + args[i]);
+                    break;
             }
         }
 
-        // Prevent restart from a when using only lowercase with a defined start string
-        if (start == "A" && onlyLowerCase == true)
-            start = "a";
+        if (method == BRUTE) {
+            if (onlyLowerCase && start.equals("A"))
+                start = "a";
 
-        if ((method == 0) || (method > 3)) {
-            printhelp();
-            return;
-        }
-
-        if (method == 1) {
-            BrutePasswd.doit(keystore, start);
-        }
-
-        if (method == 2) {
+            BrutePasswd.go(keystore, start);
+        } else if (method == WORD)
             WordlistPasswd.doit(keystore, dict);
-        }
-
-        if (method == 3) {
+        else if (method == SWORD)
             SmartWordlistPasswd.doit(keystore, dict);
-        }
+        else
+            printHelp();
     }
 
-    public static void quit() {
-        System.out.println("\r\nFor updates visit http://code.google.com/p/android-keystore-password-recover/");
+    static void quit() {
         System.exit(0);
     }
 
-    static void printhelp() {
+    private static void printHelp() {
         System.out.println("AndroidKeystorePasswordRecoveryTool by M@xiking");
+        System.out.println("v1.06 updated by rafaelwbr; v1.07 updated by ravensbane; v1.08 updated by JarnoVgr");
         System.out.println("Version " + VERSION + "\r\n");
         System.out.println("There are 3 Methods to recover the key for your Keystore:\r\n");
         System.out.println("1: simply bruteforce - good luck");
@@ -127,8 +119,5 @@ public class AndroidKeystoreBrute {
 
         long maxBytes = Runtime.getRuntime().maxMemory();
         System.out.println("Max memory: " + maxBytes / 1024L / 1024L + "M\r\n");
-
-        System.out.println("v1.06 updated by rafaelwbr; v1.07 updated by ravensbane");
-        System.out.println("For updates visit http://code.google.com/p/android-keystore-password-recover/");
     }
 }

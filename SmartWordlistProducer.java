@@ -25,7 +25,7 @@ public class SmartWordlistProducer implements Runnable {
 
         // get the resume point if one exists and set up the string array with the first password to test
         resumePoint = SmartWordlistResume.getResumePoint(words);
-        comboToTest = new String[Math.max(resumePoint.size(), AndroidKeystoreBrute.minpieces) + 1];
+        comboToTest = new String[Math.max(resumePoint.size(), AndroidKeystoreBrute.minPieces) + 1];
 
         // the first slot in the string array is reserved for characters specified by the firstchars arg
         if (AndroidKeystoreBrute.firstchars != null) {
@@ -36,11 +36,11 @@ public class SmartWordlistProducer implements Runnable {
 
         if (resumePoint.isEmpty()) {
             // start at the beginning
-            for (int i = 1; i <= AndroidKeystoreBrute.minpieces; ++i) {
+            for (int i = 1; i <= AndroidKeystoreBrute.minPieces; ++i) {
                 comboToTest[i] = wordsFirst;
             }
         } else {
-            if (resumePoint.size() < AndroidKeystoreBrute.minpieces) {
+            if (resumePoint.size() < AndroidKeystoreBrute.minPieces) {
                 throw new IOException("numpieces arg specifies a larger min number of pieces than resume data");
             } else {
                 System.out.println("Resuming where we left off...");
@@ -60,7 +60,7 @@ public class SmartWordlistProducer implements Runnable {
             comboToTest = getNextCombo(comboToTest, comboToTest.length - 1);
 
             // if the next combo to check exceeds our limit, stop (wait a bit for consumers to finish current checks)
-            if (comboToTest.length > AndroidKeystoreBrute.maxpieces + 1) {
+            if (comboToTest.length > AndroidKeystoreBrute.maxPieces + 1) {
                 SmartWordlistPasswd.allPwdsTested = true;
 
                 try {

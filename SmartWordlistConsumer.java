@@ -18,7 +18,7 @@ public class SmartWordlistConsumer implements Runnable {
 
             }
 
-            if (AndroidKeystoreBrute.minlength > 0 && comboToTest.length() < AndroidKeystoreBrute.minlength) {
+            if (AndroidKeystoreBrute.minLength > 0 && comboToTest.length() < AndroidKeystoreBrute.minLength) {
                 // faster not to check length if -l arg isn't specified
             } else {
                 if (SmartWordlistPasswd.keyIsRight(comboToTest.toCharArray())) {

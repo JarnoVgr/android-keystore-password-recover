@@ -380,7 +380,7 @@ public class JKS extends KeyStoreSpi {
     // Own methods.
     // ------------------------------------------------------------------------
 
-    private static Certificate readCert(DataInputStream in)
+    public static Certificate readCert(DataInputStream in)
             throws IOException, CertificateException, NoSuchAlgorithmException {
         String type = in.readUTF();
         int len = in.readInt();
