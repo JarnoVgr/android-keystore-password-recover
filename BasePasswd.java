@@ -14,10 +14,10 @@ class BasePasswd extends Thread {
     private static final int MAGIC = 0xFEEDFEED;
     private static final int PRIVATE_KEY = 1;
     private static final int TRUSTED_CERT = 2;
-    private static String alias = "";
-    private static JKS j;
     static String keystoreFileName;
     static int numberOfThreads = 8;
+    private static String alias = "";
+    private static JKS j;
     private static MessageDigest sha;
     private static byte[] key;
     private static byte[] keystream;
@@ -87,26 +87,22 @@ class BasePasswd extends Thread {
         }
     }
 
-    static void engineLoad(InputStream in, char[] passwd)
-            throws IOException, NoSuchAlgorithmException, CertificateException {
-
+    static void engineLoad(InputStream in, char[] passwd) throws IOException, NoSuchAlgorithmException, CertificateException {
         MessageDigest md = MessageDigest.getInstance("SHA");
         md.update(charsToBytes(passwd));
         md.update("Mighty Aphrodite".getBytes("UTF-8")); // HAR HAR
 
         DataInputStream din = new DataInputStream(new DigestInputStream(in, md));
 
-        if (din.readInt() != MAGIC) {
+        if (din.readInt() != MAGIC)
             throw new IOException("not a JavaKeyStore");
-        }
 
         din.readInt(); // version no.
 
         final int n = din.readInt();
 
-        if (n < 0) {
+        if (n < 0)
             throw new IOException("negative entry count");
-        }
 
         int type = din.readInt();
         alias = din.readUTF();
@@ -114,7 +110,6 @@ class BasePasswd extends Thread {
 
         switch (type) {
             case PRIVATE_KEY:
-
                 int len = din.readInt();
                 encoded = new byte[len];
                 din.read(encoded);
@@ -128,12 +123,9 @@ class BasePasswd extends Thread {
 
                 // certChains.put(alias, chain);
                 break;
-
             case TRUSTED_CERT:
-
                 // trustedCerts.put(alias, readCert(din));
                 break;
-
             default:
                 throw new IOException("malformed key store");
         }
@@ -149,14 +141,13 @@ class BasePasswd extends Thread {
         byte[] hash = new byte[20];
         din.read(hash);
 
-        if (MessageDigest.isEqual(hash, md.digest())) {
+        if (MessageDigest.isEqual(hash, md.digest()))
             throw new IOException("signature not verified");
-        }
     }
 
     static boolean keyIsRight(char[] password) {
         try {
-            return decryptKey(charsToBytes(password));
+            return decryptKey(JKS.charsToBytes(password));
         } catch (Exception x) {
             return false;
         }

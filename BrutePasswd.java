@@ -61,15 +61,13 @@ public class BrutePasswd extends BasePasswd {
         go();
         setupAlphabet();
 
-        char[] pass;
-        pass = start.toCharArray();
+        currPass = start.toCharArray();
 
-        InputStream in = new FileInputStream(keystore);
-        currPass = pass;
 
         numberOfThreads = Runtime.getRuntime().availableProcessors() * 2;
 
-        loadKeystore(in, pass);
+        InputStream in = new FileInputStream(keystore);
+        loadKeystore(in, currPass);
 
         try {
             keystoreFileName = keystore;
@@ -78,11 +76,10 @@ public class BrutePasswd extends BasePasswd {
                 Thread t = new BrutePasswd();
                 t.start();
             }
+            System.out.println("Fired up " + numberOfThreads + " threads\r\n");
 
+            //Start benchmark
             new BruteBenchmark().start();
-
-            System.out.println("Fire up " + numberOfThreads + " Threads\r\n");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,18 +118,19 @@ public class BrutePasswd extends BasePasswd {
     }
 
     public void run() {
-        char[] str = new char[1];
+        char[] tryPass = new char[1];
 
         while (!found) {
-            str = nextWord(str);
+            tryPass = nextWord(tryPass);
 
-            if (keyIsRight(str)) {
-                String passwd = String.copyValueOf(str);
-                found = true;
+            if (!keyIsRight(tryPass))
+                continue;
 
-                foundPassword(passwd);
-                AndroidKeystoreBrute.quit();
-            }
+            String passwd = String.copyValueOf(tryPass);
+            found = true;
+
+            foundPassword(passwd);
+            AndroidKeystoreBrute.quit();
         }
     }
 }

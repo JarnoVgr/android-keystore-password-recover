@@ -397,7 +397,7 @@ public class JKS extends KeyStoreSpi {
         dout.write(b);
     }
 
-    private static byte[] decryptKey(byte[] encryptedPKI, byte[] passwd) throws UnrecoverableKeyException {
+    static byte[] decryptKey(byte[] encryptedPKI, byte[] passwd) throws UnrecoverableKeyException {
         try {
             EncryptedPrivateKeyInfo epki = new EncryptedPrivateKeyInfo(encryptedPKI);
             byte[] encr = epki.getEncryptedData();
@@ -460,7 +460,7 @@ public class JKS extends KeyStoreSpi {
         }
     }
 
-    private static byte[] charsToBytes(char[] passwd) {
+    static byte[] charsToBytes(char[] passwd) {
         byte[] buf = new byte[passwd.length * 2];
         for (int i = 0, j = 0; i < passwd.length; i++) {
             buf[j++] = (byte) (passwd[i] >>> 8);
